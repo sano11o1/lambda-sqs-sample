@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
@@ -16,27 +14,25 @@ func main() {
 
 	queueUrl := "https://sqs.ap-northeast-1.amazonaws.com/087391343737/MyQueue"
 
-	_, err := svc.SendMessage(&sqs.SendMessageInput{
-		DelaySeconds: aws.Int64(10),
-		MessageAttributes: map[string]*sqs.MessageAttributeValue{
-			"Title": &sqs.MessageAttributeValue{
-				DataType:    aws.String("String"),
-				StringValue: aws.String("The Whistler"),
+	for i := 0; i < 10; i++ {
+		svc.SendMessage(&sqs.SendMessageInput{
+			DelaySeconds: aws.Int64(10),
+			MessageAttributes: map[string]*sqs.MessageAttributeValue{
+				"Title": &sqs.MessageAttributeValue{
+					DataType:    aws.String("String"),
+					StringValue: aws.String("The Whistler"),
+				},
+				"Author": &sqs.MessageAttributeValue{
+					DataType:    aws.String("String"),
+					StringValue: aws.String("John Grisham"),
+				},
+				"WeeksOn": &sqs.MessageAttributeValue{
+					DataType:    aws.String("Number"),
+					StringValue: aws.String("6"),
+				},
 			},
-			"Author": &sqs.MessageAttributeValue{
-				DataType:    aws.String("String"),
-				StringValue: aws.String("John Grisham"),
-			},
-			"WeeksOn": &sqs.MessageAttributeValue{
-				DataType:    aws.String("Number"),
-				StringValue: aws.String("6"),
-			},
-		},
-		MessageBody: aws.String("Information about current NY Times fiction bestseller for week of 12/11/2016."),
-		QueueUrl:    &queueUrl,
-	})
-
-	if err != nil {
-		fmt.Println("エラー", err)
+			MessageBody: aws.String("Information about current NY Times fiction bestseller for week of 12/11/2016."),
+			QueueUrl:    &queueUrl,
+		})
 	}
 }
