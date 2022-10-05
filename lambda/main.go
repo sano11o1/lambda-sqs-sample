@@ -2,19 +2,24 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func HandleRequest(ctx context.Context, event events.SQSEvent) error {
+func HandleRequest(ctx context.Context, event events.SQSEvent) (string, error) {
 	log.Print("😈😈😈😈 messageの数", len(event.Records))
-	for _, e := range event.Records {
-		fmt.Println("イベント😇", e.MessageId)
+	for _, message := range event.Records {
+		loc, _ := time.LoadLocation("Asia/Tokyo")
+		number := *message.MessageAttributes["number"].StringValue
+		if number == "B-3" {
+			time.Sleep(time.Second * 10)
+		}
+		log.Print("😇😇😇😇", number, time.Now().In(loc))
 	}
-	return nil
+	return "success", nil
 }
 
 func main() {
