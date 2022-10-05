@@ -14,10 +14,10 @@ func HandleRequest(ctx context.Context, event events.SQSEvent) (string, error) {
 	for _, message := range event.Records {
 		loc, _ := time.LoadLocation("Asia/Tokyo")
 		number := *message.MessageAttributes["number"].StringValue
-		if number == "B-3" {
+		if number == "A-4" {
 			time.Sleep(time.Second * 10)
 		}
-		log.Print("😇😇😇😇", number, time.Now().In(loc))
+		log.Print("😇😇😇😇", number, "⏱️", time.Now().In(loc))
 	}
 	return "success", nil
 }
